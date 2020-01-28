@@ -1,0 +1,6 @@
+/.ve
+/.idea
+__pycache__
+/db.sqlite3
+/.vagrant
+/ubuntu-bionic-18.04-cloudimg-console.log
