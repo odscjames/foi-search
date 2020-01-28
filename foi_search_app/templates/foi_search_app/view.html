@@ -1,5 +1,13 @@
+{% extends "foi_search_app/base.html" %}
 
 
-<p>{{ result.question }}</p>
-<a href="{{ result.link }}">View Original Source</a>
-From <a href="{{ result.source_link }}">{{ result.source_title }}</a>
+{% block title %}View{% endblock %}
+
+{% block content %}
+
+
+    <p>{{ result.question }}</p>
+    <a href="{{ result.link }}">View Original Source</a>
+    From <a href="{{ result.source_link }}">{{ result.source_title }}</a>
+
+{% endblock %}

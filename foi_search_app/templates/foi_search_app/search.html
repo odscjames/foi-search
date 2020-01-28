@@ -1,23 +1,31 @@
-
-<form action="/app/search" method="get">
-    <label>
-        Search
-        <input type="text" name="search" value="{{ search_query }}">
-    </label>
-    <input type="submit">
-</form>
+{% extends "foi_search_app/base.html" %}
 
 
-{% if results %}
-    <ul>
-    {% for result in results %}
-        <li>
-            <p>{{ result.question }}</p>
-            <a href="/app/view/{{ result.id }}">View</a>
-            From {{ result.source_title }}
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No results</p>
-{% endif %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+    <form action="/app/search" method="get">
+        <label>
+            Search
+            <input type="text" name="search" value="{{ search_query }}">
+        </label>
+        <input type="submit">
+    </form>
+
+
+    {% if results %}
+        <ul>
+        {% for result in results %}
+            <li>
+                <p>{{ result.question }}</p>
+                <a href="/app/view/{{ result.id }}">View</a>
+                From {{ result.source_title }}
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results</p>
+    {% endif %}
+
+{% endblock %}

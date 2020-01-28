@@ -1,9 +1,18 @@
-<p>HELLO</p>
+{% extends "foi_search_app/base.html" %}
 
-<form action="/app/search" method="get">
-    <label>
-        Search
-        <input type="text" name="search">
-    </label>
-    <input type="submit">
-</form>
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+
+    <p>HELLO</p>
+
+    <form action="/app/search" method="get">
+        <label>
+            Search
+            <input type="text" name="search">
+        </label>
+        <input type="submit">
+    </form>
+
+{% endblock %}
