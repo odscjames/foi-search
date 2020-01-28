@@ -5,7 +5,7 @@
 
 {% block content %}
 
-    <form action="/app/search" method="get">
+    <form action="{% url 'search' %}" method="get">
         <label>
             Search
             <input type="text" name="search" value="{{ search_query }}">
@@ -19,7 +19,7 @@
         {% for result in results %}
             <li>
                 <p>{{ result.question }}</p>
-                <a href="/app/view/{{ result.id }}">View</a>
+                <a href="{% url 'view' data_id=result.id %}">View</a>
                 From {{ result.source_title }}
             </li>
         {% endfor %}
