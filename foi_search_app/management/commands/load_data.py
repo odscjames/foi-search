@@ -27,8 +27,11 @@ class Command(BaseCommand):
                 index="foisearch",
                 id=options['sourceid'] + '-' + item['id'],
                 body={
+                    # The data
                     'question': item['question'],
                     'link': item['link'],
+                    # The flattened information about the source
+                    'source_id': options['sourceid'],
                     'source_title': data['title'],
                     'source_link': data['link'],
                 }
