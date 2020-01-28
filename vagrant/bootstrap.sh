@@ -14,5 +14,6 @@ apt-get update
 
 DEBIAN_FRONTEND=noninteractive apt-get install -y elasticsearch
 
-/bin/systemctl daemon-reload
-/bin/systemctl enable elasticsearch.service
+systemctl daemon-reload
+systemctl enable elasticsearch.service
+systemctl start elasticsearch.service
