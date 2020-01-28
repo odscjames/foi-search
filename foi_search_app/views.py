@@ -29,7 +29,23 @@ def search(request):
         'results': []
     }
     for hit in res['hits']['hits']:
-        context['results'].append(hit['_source'])
+        item = hit['_source']
+        item['id'] = hit['_id']
+        context['results'].append(item)
 
 
     return render(request, 'foi_search_app/search.html', context)
+
+
+def view(request, data_id):
+
+    search_query = request.GET.get('search')
+
+    es = Elasticsearch()
+    res = es.get(index="foisearch", id=data_id)
+
+    context = {
+        'result': res['_source']
+    }
+
+    return render(request, 'foi_search_app/view.html', context)

@@ -13,7 +13,8 @@
     {% for result in results %}
         <li>
             <p>{{ result.question }}</p>
-            <a href="{{ result.link }}">View</a>
+            <a href="/app/view/{{ result.id }}">View</a>
+            From {{ result.source_title }}
         </li>
     {% endfor %}
     </ul>

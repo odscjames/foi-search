@@ -9,6 +9,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('uri')
+        parser.add_argument('sourceid')
 
     def handle(self, *args, **options):
 
@@ -22,6 +23,15 @@ class Command(BaseCommand):
             if 'id' not in item:
                 item['id'] = hashlib.md5(item['link'].encode('utf-8')).hexdigest()
 
-            es.index(index="foisearch", id=item['id'], body=item)
+            es.index(
+                index="foisearch",
+                id=options['sourceid'] + '-' + item['id'],
+                body={
+                    'question': item['question'],
+                    'link': item['link'],
+                    'source_title': data['title'],
+                    'source_link': data['link'],
+                }
+            )
 
         self.stdout.write(self.style.SUCCESS('Successfully loaded'))
