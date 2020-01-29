@@ -24,7 +24,8 @@ def search(request):
             "source_id": {
                 "terms": {"field": "source_id"}
             }
-        }
+        },
+        "size": settings.SEARCH_PAGE_RESULTS_PER_PAGE
     }
 
     es = Elasticsearch()

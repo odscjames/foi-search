@@ -123,3 +123,5 @@ STATIC_URL = '/static/'
 # Write and Read are different so you can use one app to build into one index while reading from another index, then just switch over to the now correct index
 ELASTICSEARCH_INDEX_WRITE = 'foisearch'
 ELASTICSEARCH_INDEX_READ = 'foisearch'
+
+SEARCH_PAGE_RESULTS_PER_PAGE = 15
