@@ -40,8 +40,6 @@ def search(request):
 
 def view(request, data_id):
 
-    search_query = request.GET.get('search')
-
     es = Elasticsearch()
     res = es.get(index=settings.ELASTICSEARCH_INDEX_READ, id=data_id)
 
