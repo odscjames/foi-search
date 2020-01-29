@@ -39,11 +39,13 @@
 
         <div>
             {% if show_page_prev %}
+                <a href="{% url 'search' %}?search={{ search_query|urlencode }}&page=1">FIRST</a>
                 <a href="{% url 'search' %}?search={{ search_query|urlencode }}&page={{ page_number|add:"-1" }}">PREV</a>
             {% endif %}
             Page {{  page_number }} of {{ total_pages }}
             {% if show_page_next %}
                 <a href="{% url 'search' %}?search={{ search_query|urlencode }}&page={{ page_number|add:"1" }}">NEXT</a>
+                <a href="{% url 'search' %}?search={{ search_query|urlencode }}&page={{ total_pages }}">LAST</a>
             {% endif %}
         </div>
 
