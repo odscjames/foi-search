@@ -2,16 +2,16 @@ Vagrant.configure(2) do |config|
 
     config.vm.box = "ubuntu/xenial64"
 
-    config.vm.define "app" do |normal|
+    config.vm.define "app" do |app|
 
-        config.vm.box = "ubuntu/bionic64"
+        app.vm.box = "ubuntu/bionic64"
 
-        config.vm.network "forwarded_port", guest: 8000, host: 8000
+        app.vm.network "forwarded_port", guest: 8000, host: 8000
 
 
-        config.vm.synced_folder ".", "/vagrant",  :owner=> 'ubuntu', :group=>'users', :mount_options => ['dmode=777', 'fmode=777']
+        app.vm.synced_folder ".", "/vagrant",  :owner=> 'ubuntu', :group=>'users', :mount_options => ['dmode=777', 'fmode=777']
 
-        config.vm.provider "virtualbox" do |vb|
+        app.vm.provider "virtualbox" do |vb|
            # Display the VirtualBox GUI when booting the machine
            vb.gui = false
 
@@ -20,7 +20,7 @@ Vagrant.configure(2) do |config|
 
         end
 
-        config.vm.provision :shell, path: "vagrant/bootstrap.sh"
+        app.vm.provision :shell, path: "vagrant/bootstrap.sh"
 
     end
 
