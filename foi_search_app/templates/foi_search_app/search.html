@@ -15,6 +15,16 @@
 
 
     {% if results %}
+
+
+        <ul>
+        {% for result in stats_by_source %}
+            <li>
+                <p>{{ result.key }} has {{ result.doc_count }} results</p>
+            </li>
+        {% endfor %}
+        </ul>
+
         <ul>
         {% for result in results %}
             <li>

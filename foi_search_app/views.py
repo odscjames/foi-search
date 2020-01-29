@@ -19,6 +19,11 @@ def search(request):
                 "fields": ["question"],
                 "default_operator": "and"
             }
+        },
+        "aggs": {
+            "source_id": {
+                "terms": {"field": "source_id"}
+            }
         }
     }
 
@@ -26,6 +31,7 @@ def search(request):
     res = es.search(index=settings.ELASTICSEARCH_INDEX_READ, body=elastic_query)
 
     context = {
+        'stats_by_source': [],
         'search_query': search_query,
         'results': []
     }
@@ -33,7 +39,11 @@ def search(request):
         item = hit['_source']
         item['id'] = hit['_id']
         context['results'].append(item)
-
+    for data in res['aggregations']['source_id']['buckets']:
+        context['stats_by_source'].append({
+            'key': data['key'],
+            'doc_count': data['doc_count'],
+        })
 
     return render(request, 'foi_search_app/search.html', context)
 
