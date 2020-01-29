@@ -12,7 +12,11 @@ def index(request):
 def search(request):
 
     search_query = request.GET.get('search')
-    search_source = request.GET.get('source')
+    search_source = []
+    for key, value in request.GET.items():
+        if key.startswith("source-"):
+            search_source.append(key[7:])
+
     page_number = int(request.GET.get('page', 1))
 
     elastic_query_default = {
@@ -40,7 +44,7 @@ def search(request):
             "bool": {
               "must": elastic_query_default,
               "filter": {
-                "term": {"source_id": search_source}
+                "terms": {"source_id": search_source}
               },
             }
         }

@@ -10,6 +10,16 @@
             Search
             <input type="text" name="search" value="{{ search_query }}">
         </label>
+        {% if results and stats_by_source|length > 1 %}
+            <div>
+                {% for result in stats_by_source %}
+                <label>
+                    <input type="checkbox" name="source-{{ result.key }}" value="yes">
+                    {{ result.key }} ({{ result.doc_count }} results)
+                </label>
+                {% endfor %}
+            </div>
+        {% endif %}
         <input type="submit">
     </form>
 
