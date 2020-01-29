@@ -18,6 +18,7 @@
 
 
         <ul>
+            <li>{{ total_results_count }} results in total</li>
         {% for result in stats_by_source %}
             <li>
                 <p>{{ result.key }} has {{ result.doc_count }} results</p>

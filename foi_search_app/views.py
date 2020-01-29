@@ -13,6 +13,8 @@ def search(request):
     search_query = request.GET.get('search')
 
     elastic_query = {
+        # For paging purposes, we are just going to be lazy and say we always want all hits.
+        "track_total_hits": True,
         "query": {
             "simple_query_string": {
                 "query": search_query,
@@ -34,7 +36,8 @@ def search(request):
     context = {
         'stats_by_source': [],
         'search_query': search_query,
-        'results': []
+        'results': [],
+        'total_results_count': res['hits']['total']['value'],
     }
     for hit in res['hits']['hits']:
         item = hit['_source']
