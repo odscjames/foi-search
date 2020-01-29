@@ -19,11 +19,24 @@
 
         <ul>
             <li>{{ total_results_count }} results in total</li>
-        {% for result in stats_by_source %}
+            {% if search_source %}
             <li>
-                <p>{{ result.key }} has {{ result.doc_count }} results</p>
+                Currently showing results in {{ search_source }} only.
+                <a href="{% url 'search' %}?search={{ search_query|urlencode }}">
+                    Show all
+                </a>
             </li>
-        {% endfor %}
+            {% else %}
+                {% for result in stats_by_source %}
+                    <li>
+                        <p>
+                            <a href="{% url 'search' %}?search={{ search_query|urlencode }}&source={{ result.key|urlencode  }}">
+                                {{ result.key }} has {{ result.doc_count }} results
+                            </a>
+                        </p>
+                    </li>
+                {% endfor %}
+            {% endif %}
         </ul>
 
         <ul>

@@ -12,18 +12,20 @@ def index(request):
 def search(request):
 
     search_query = request.GET.get('search')
+    search_source = request.GET.get('source')
     page_number = int(request.GET.get('page', 1))
+
+    elastic_query_default = {
+        "simple_query_string": {
+            "query": search_query,
+            "fields": ["question"],
+            "default_operator": "and"
+        }
+    }
 
     elastic_query = {
         # For paging purposes, we are just going to be lazy and say we always want all hits.
         "track_total_hits": True,
-        "query": {
-            "simple_query_string": {
-                "query": search_query,
-                "fields": ["question"],
-                "default_operator": "and"
-            }
-        },
         "aggs": {
             "source_id": {
                 "terms": {"field": "source_id"}
@@ -33,12 +35,25 @@ def search(request):
         "from": ((page_number - 1) * settings.SEARCH_PAGE_RESULTS_PER_PAGE)
     }
 
+    if search_source:
+        elastic_query['query'] = {
+            "bool": {
+              "must": elastic_query_default,
+              "filter": {
+                "term": {"source_id": search_source}
+              },
+            }
+        }
+    else:
+        elastic_query['query'] = elastic_query_default
+
     es = Elasticsearch()
     res = es.search(index=settings.ELASTICSEARCH_INDEX_READ, body=elastic_query)
 
     context = {
         'stats_by_source': [],
         'search_query': search_query,
+        'search_source': search_source,
         'page_number': page_number,
         'results': [],
         'total_results_count': res['hits']['total']['value'],
