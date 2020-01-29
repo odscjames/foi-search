@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from elasticsearch import Elasticsearch
 from foi_search  import settings
 import json
+from math import ceil
 
 def index(request):
     return render(request, 'foi_search_app/index.html', {})
@@ -11,6 +12,7 @@ def index(request):
 def search(request):
 
     search_query = request.GET.get('search')
+    page_number = int(request.GET.get('page', 1))
 
     elastic_query = {
         # For paging purposes, we are just going to be lazy and say we always want all hits.
@@ -27,7 +29,8 @@ def search(request):
                 "terms": {"field": "source_id"}
             }
         },
-        "size": settings.SEARCH_PAGE_RESULTS_PER_PAGE
+        "size": settings.SEARCH_PAGE_RESULTS_PER_PAGE,
+        "from": ((page_number - 1) * settings.SEARCH_PAGE_RESULTS_PER_PAGE)
     }
 
     es = Elasticsearch()
@@ -36,9 +39,13 @@ def search(request):
     context = {
         'stats_by_source': [],
         'search_query': search_query,
+        'page_number': page_number,
         'results': [],
         'total_results_count': res['hits']['total']['value'],
+        'total_pages': ceil(res['hits']['total']['value'] / settings.SEARCH_PAGE_RESULTS_PER_PAGE),
+        'show_page_prev': (True if page_number > 1 else False),
     }
+    context['show_page_next'] = (True if page_number < context['total_pages'] else False)
     for hit in res['hits']['hits']:
         item = hit['_source']
         item['id'] = hit['_id']
