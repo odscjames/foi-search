@@ -1,0 +1,18 @@
+{% extends "foi_search_app/base.html" %}
+
+
+{% block title %}Stats{% endblock %}
+
+{% block content %}
+
+
+    <ul>
+    {% for result in stats_by_source %}
+        <li>
+            <p>{{ result.key }}</p>
+            <p>{{ result.doc_count }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

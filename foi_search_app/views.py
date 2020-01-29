@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from elasticsearch import Elasticsearch
-
+from foi_search  import settings
+import json
 
 def index(request):
     return render(request, 'foi_search_app/index.html', {})
@@ -22,7 +23,7 @@ def search(request):
     }
 
     es = Elasticsearch()
-    res = es.search(index="foisearch", body=elastic_query)
+    res = es.search(index=settings.ELASTICSEARCH_INDEX_READ, body=elastic_query)
 
     context = {
         'search_query': search_query,
@@ -42,10 +43,34 @@ def view(request, data_id):
     search_query = request.GET.get('search')
 
     es = Elasticsearch()
-    res = es.get(index="foisearch", id=data_id)
+    res = es.get(index=settings.ELASTICSEARCH_INDEX_READ, id=data_id)
 
     context = {
         'result': res['_source']
     }
 
     return render(request, 'foi_search_app/view.html', context)
+
+def stats(request):
+
+    elastic_query = {
+        "aggs": {
+            "source_id": {
+                "terms": {"field": "source_id"}
+            }
+        }
+    }
+
+    es = Elasticsearch()
+    res = es.search(index=settings.ELASTICSEARCH_INDEX_READ, body=elastic_query)
+
+    context = {
+        'stats_by_source': []
+    }
+    for data in res['aggregations']['source_id']['buckets']:
+        context['stats_by_source'].append({
+            'key': data['key'],
+            'doc_count': data['doc_count'],
+        })
+
+    return render(request, 'foi_search_app/stats.html', context)

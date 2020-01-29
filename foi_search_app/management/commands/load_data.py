@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand, CommandError
 import json
 import hashlib
 from elasticsearch import Elasticsearch
-
+from foi_search import settings
 
 class Command(BaseCommand):
     help = 'Loads Data Into Elasticsearch'
@@ -14,7 +14,27 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         es = Elasticsearch()
-        es.indices.create(index='foisearch', ignore=400)
+        es.indices.create(index=settings.ELASTICSEARCH_INDEX_WRITE, ignore=400, body={
+            "mappings": {
+                "properties": {
+                    "question": {
+                        "type": "text"
+                    },
+                    "link": {
+                        "type": "keyword"
+                    },
+                    "source_id": {
+                        "type": "keyword"
+                    },
+                    "source_title": {
+                        "type": "keyword"
+                    },
+                    "source_link": {
+                        "type": "keyword"
+                    }
+                }
+            }
+        })
 
         with open(options['uri']) as file:
             data = json.load(file)
@@ -24,7 +44,7 @@ class Command(BaseCommand):
                 item['id'] = hashlib.md5(item['link'].encode('utf-8')).hexdigest()
 
             es.index(
-                index="foisearch",
+                index=settings.ELASTICSEARCH_INDEX_WRITE,
                 id=options['sourceid'] + '-' + item['id'],
                 body={
                     # The data
